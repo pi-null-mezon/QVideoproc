@@ -1,0 +1,2 @@
+This directory was created especially to store libopencv_java3.so for the Android build! Do not delete!
+More information can be found here: http://stackoverflow.com/questions/27562311/how-to-integrate-opencv-into-qt-creator-android-project

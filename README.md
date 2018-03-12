@@ -1,0 +1,1 @@
+This repo contains some examples of how to work with video camera by means of Qt and Opencv libraries 
