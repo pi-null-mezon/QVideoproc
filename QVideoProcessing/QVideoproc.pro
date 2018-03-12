@@ -11,8 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 TEMPLATE =  app
-TARGET  =   QVideoProcessing
-VERSION =   3.0.0.0
+TARGET  =   QVideoproc
+VERSION =   1.0.0.0
 
 DEFINES +=  APP_NAME=\\\"$${TARGET}\\\" \
             APP_VERS=\\\"$${VERSION}\\\"
@@ -42,8 +42,6 @@ designbuild {
     message("Release build configuration was selected, deployment paths will be used")
 }
 
-#Apperence
-DEFINES += APP_MARGIN=5
 
 
 
