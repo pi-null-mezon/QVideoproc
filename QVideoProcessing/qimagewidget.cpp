@@ -15,6 +15,7 @@ QImageWidget::QImageWidget(QWidget *parent): WIDGET_CLASS(parent)
         this->setAutoFillBackground(true);
         QSurfaceFormat format;
         format.setSamples(3);   //antialiasing becomes better for high values, but performance becomes too slow (for the instance, 3 is good enought for Pentium IV)
+        //format.setRenderableType(QSurfaceFormat::OpenGL);
         this->setFormat(format);
         qWarning("QOpenGLWidget manual samples: %d", this->format().samples());
     #endif
@@ -95,7 +96,7 @@ void QImageWidget::drawString(QPainter &painter, const QRect &input_rect)
     painter.setPen( pen );
     painter.setBrush(Qt::green);
 
-    path.addText(input_rect.x() + APP_MARGIN, input_rect.y() + font.pointSize() + APP_MARGIN, font, m_string);
+    path.addText(input_rect.x(), input_rect.y() + font.pointSize(), font, m_string);
     painter.drawPath(path);
     painter.setBrush(Qt::NoBrush);
 }

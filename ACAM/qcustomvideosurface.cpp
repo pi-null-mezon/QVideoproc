@@ -8,7 +8,8 @@ QList<QVideoFrame::PixelFormat> QCustomVideoSurface::supportedPixelFormats(QAbst
 {
     Q_UNUSED(handleType);
     return QList<QVideoFrame::PixelFormat>()
-            << QVideoFrame::Format_ARGB32
+            << QVideoFrame::Format_RGB32
+            /*<< QVideoFrame::Format_ARGB32
             << QVideoFrame::Format_ARGB32_Premultiplied
             << QVideoFrame::Format_RGB32
             << QVideoFrame::Format_RGB24
@@ -39,10 +40,10 @@ QList<QVideoFrame::PixelFormat> QCustomVideoSurface::supportedPixelFormats(QAbst
             << QVideoFrame::Format_Y16
             << QVideoFrame::Format_Jpeg
             << QVideoFrame::Format_CameraRaw
-            << QVideoFrame::Format_AdobeDng;
+            << QVideoFrame::Format_AdobeDng*/;
 }
 
-bool QCustomVideoSurface::present(const QVideoFrame &frame){
+bool QCustomVideoSurface::present(const QVideoFrame &frame) {
 
     if(frame.isValid()) {
         QVideoFrame cloneFrame(frame); // makes a shallow copy (since QVideoFrame is explicitly shared), to get the access to the pixel data

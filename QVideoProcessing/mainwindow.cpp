@@ -8,7 +8,6 @@ MainWindow::MainWindow(QWidget *parent):
     this->setCentralWidget(_cW);
     //--------------------------------------------------------------
     pt_mainLayout = new QVBoxLayout();
-    pt_mainLayout->setMargin(APP_MARGIN);
     _cW->setLayout(pt_mainLayout);
     //--------------------------------------------------------------
     pt_display = new QImageWidget();
@@ -200,7 +199,6 @@ void MainWindow::show_about()
    aboutdialog->setFixedSize(pSize*30,pSize*17);
 
    QVBoxLayout *templayout = new QVBoxLayout();
-   templayout->setMargin(APP_MARGIN);
 
    QLabel *projectname = new QLabel(QString(APP_NAME) +"\t"+ QString(APP_VERS));
    projectname->setFrameStyle(QFrame::Box | QFrame::Raised);

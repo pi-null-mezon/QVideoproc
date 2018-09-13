@@ -1,4 +1,4 @@
-#CONFIG += opengl_widgets
+CONFIG += opengl_widgets
 opengl_widgets {
     message("OpenGl will be used for build")
     DEFINES +=  USE_OPENGL_WIDGETS \
