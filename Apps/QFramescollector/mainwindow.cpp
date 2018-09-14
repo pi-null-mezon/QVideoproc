@@ -48,6 +48,7 @@ void MainWindow::getDevicesList()
 
 void MainWindow::getViewfinderSettings()
 {
+    ui->viewfindersettingsCB->clear();
     QList<QCameraViewfinderSettings> _settingslist = qvideosource.supportedViewfinderSettings();
     for(int i = 0; i < _settingslist.length(); i++) {
         QString description = QString("%1x%2 - %3 fps").arg(QString::number(_settingslist[i].resolution().width()),
@@ -60,6 +61,7 @@ void MainWindow::getViewfinderSettings()
 void MainWindow::on_deviceCB_currentIndexChanged(int index)
 {
     QList<QCameraInfo> _devlist = QCameraInfo::availableCameras();
+    qvideosource.close();
     qvideosource.open(_devlist.at(index));
     qvideosource.resume();
     getViewfinderSettings();
@@ -67,8 +69,10 @@ void MainWindow::on_deviceCB_currentIndexChanged(int index)
 
 void MainWindow::on_viewfindersettingsCB_currentIndexChanged(int index)
 {
-    QList<QCameraViewfinderSettings> _settingslist = qvideosource.supportedViewfinderSettings();
-    qvideosource.setViewfinderSettings(_settingslist.at(index));
+    if(index > 0) {
+        QList<QCameraViewfinderSettings> _settingslist = qvideosource.supportedViewfinderSettings();
+        qvideosource.setViewfinderSettings(_settingslist.at(index));
+    }
 }
 
 void MainWindow::commutate()
@@ -124,12 +128,18 @@ void MainWindow::loadSessionSettings()
     QSettings _settings(_settingsdir.append("/%1.ini").arg(APP_NAME),QSettings::IniFormat);
     ui->targetlocationLE->setText(_settings.value("Targetlocation","C:/Testdata").toString());
     ui->captureintervalLED->display(_settings.value("Captureinterval_s",1).toInt());
+    capturetimer.setInterval(1000*_settings.value("Captureinterval_s",1).toInt());
 }
 
 void MainWindow::on_captureTB_clicked(bool checked)
 {
-    if(checked == true)
+    if(checked == true) {
+        QPalette _palette = palette();
+        _palette.setBrush(QPalette::Button,Qt::red);
+         ui->captureTB->setPalette(_palette);
         capturetimer.start();
-    else
+    } else {
+        ui->captureTB->setPalette(palette());
         capturetimer.stop();
+    }
 }
