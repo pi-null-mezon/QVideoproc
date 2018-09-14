@@ -28,21 +28,20 @@ HEADERS  += mainwindow.h \
             qopencvprocessor.h \
             qvideocapture.h
 
-include(opencv.pri)
+include($${PWD}/../../Src/opencv.pri)
 include(opengl.pri)
 
-CONFIG += designbuild
-
-designbuild {
-    message("Design build configuration was selected, design paths will be used")
-    DEFINES += HAARCASCADES_PATH=\\\"$${OPENCV_DIR}/../sources/data/haarcascades/\\\" \
-               LBPCASCADES_PATH=\\\"$${OPENCV_DIR}/../sources/data/lbpcascades/\\\"
-} else {
-    CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT QT_NO_DEBUG_OUTPUT
-    message("Release build configuration was selected, deployment paths will be used")
-}
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
 
 
+ANDROID_PACKAGE_SOURCE_DIR = $${PWD}/android
 
 
 

@@ -11,7 +11,7 @@ class QVideoSource : public QObject
 {
     Q_OBJECT
 public:
-    enum FrameTransform {NoTransform, RotateClockWise90Degree, RotateClockOpposite90Degree, FlipVertically, FlipHorizontally,};
+    enum FrameTransform {NoTransform, RotateClockWise90Degree, RotateClockOpposite90Degree, FlipVertically, FlipHorizontally};
     explicit QVideoSource(QObject *parent = 0);
 
 signals:
@@ -32,9 +32,9 @@ private slots:
     void __onError(QCamera::Error  _error);
 
 private:
-    QCamera *pt_qcam = NULL;
+    QCamera *pt_qcam;
     QCustomVideoSurface m_qvideosurface;
-    FrameTransform m_transform = NoTransform;
+    FrameTransform m_transform;
 };
 
 

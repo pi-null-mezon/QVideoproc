@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     createThreads();
     setupActions();
 }
@@ -20,7 +19,7 @@ void MainWindow::createThreads()
     qRegisterMetaType<cv::Mat>("cv::Mat");
 
     pt_qvideosource = new QVideoSource;
-    connect(pt_qvideosource, SIGNAL(frameUpdated(cv::Mat,QImage::Format)), ui->displayWidget, SLOT(updateImage(cv::Mat,QImage::Format)));
+    connect(pt_qvideosource, SIGNAL(frameUpdated(cv::Mat,QImage::Format)), ui->displayW, SLOT(updateImage(cv::Mat,QImage::Format)));
     connect(ui->actionRotate, SIGNAL(triggered()), pt_qvideosource, SLOT(nextTransform()));
     connect(ui->actionResolution, SIGNAL(triggered()), pt_qvideosource, SLOT(setViewfinderSettings()));
 }

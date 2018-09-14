@@ -5,12 +5,13 @@
 #-------------------------------------------------
 
 QT       += core gui multimedia
+CONFIG   += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = ACAM
 TEMPLATE = app
-
+VERSION = 1.0.0.0
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -25,7 +26,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-include($${PWD}/../QVideoProcessing/opencv.pri)
+include($${PWD}/../../Src/opencv.pri)
 
 DISTFILES += \
     android/AndroidManifest.xml \

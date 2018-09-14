@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Images/stop.svg</file>
+        <file>Images/capture.svg</file>      
+    </qresource>
+</RCC>

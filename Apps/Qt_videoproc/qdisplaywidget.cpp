@@ -1,25 +1,19 @@
 #include "qdisplaywidget.h"
 
-#include <QSurfaceFormat>
 #include <QPainterPath>
 #include <QFont>
 
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 
-QDisplayWidget::QDisplayWidget(QWidget *parent) : QOpenGLWidget(parent)
+QDisplayWidget::QDisplayWidget(QWidget *parent) : QWidget(parent)
 {
-    // Opengl quality boost!
-    setAutoFillBackground(true);
-    QSurfaceFormat _format = format();
-    _format.setSamples(2);
-    setFormat(_format);
+
 }
 
 void QDisplayWidget::updateImage(const QImage &_qimg)
 {      
     m_qimg = _qimg.copy();   
-
     __updateFPS();
     update();
 }
@@ -40,7 +34,6 @@ void QDisplayWidget::updateImage(const cv::Mat &_cvmat)
             m_qimg = QImage(m_cvmat.data, m_cvmat.cols, m_cvmat.rows, 4*m_cvmat.cols, QImage::Format_RGB32);
             } break;
     }
-
     __updateFPS();
     update();
 }
@@ -49,7 +42,6 @@ void QDisplayWidget::updateImage(const cv::Mat &_cvmat, QImage::Format _format)
 {
     m_cvmat = _cvmat.clone();
     m_qimg = QImage(m_cvmat.data, m_cvmat.cols, m_cvmat.rows, m_cvmat.channels()*m_cvmat.cols, _format);
-
     __updateFPS();
     update();
 }
@@ -107,11 +99,12 @@ void QDisplayWidget::__updateFPS()
 void QDisplayWidget::__drawFPS(QPainter &painter, const QRect &_rect)
 {
     QPainterPath path;
-    double pS = std::log(_rect.width()*_rect.height())/std::log(2.0);
-    QFont font("Calibry", static_cast<int>(pS), QFont::Bold);
-    path.addText(_rect.x() + pS, _rect.y() + 2*pS,font,QString::number(m_fps,'f',0));
-
-    painter.setBrush(Qt::green);
-    painter.setPen(Qt::black);
+    QFont _font = font();
+    _font.setBold(true);
+    double pS = 0.020*std::sqrt(_rect.width()*_rect.width() + _rect.height()*_rect.height()) + 10.0;
+    _font.setPointSizeF(pS);
+    path.addText(_rect.x() + pS, _rect.y() + 2*pS,_font,QString::number(m_fps,'f',0));
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor(100,100,100,100));
     painter.drawPath(path);
 }

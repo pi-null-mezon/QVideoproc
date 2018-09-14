@@ -31,7 +31,7 @@
      <number>5</number>
     </property>
     <item>
-     <widget class="QDisplayWidget" name="displayWidget"/>
+     <widget class="QDisplayWidget" name="displayW" native="true"/>
     </item>
    </layout>
   </widget>
@@ -100,8 +100,9 @@
  <customwidgets>
   <customwidget>
    <class>QDisplayWidget</class>
-   <extends>QOpenGLWidget</extends>
+   <extends>QWidget</extends>
    <header>qdisplaywidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

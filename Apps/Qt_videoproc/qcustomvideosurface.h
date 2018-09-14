@@ -12,7 +12,7 @@ public:
 
     QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const;
 
-    bool present(const QVideoFrame &frame);
+    bool present(const QVideoFrame &frame) override;
 
 signals:
     void frameAvailable(const cv::Mat &frame, QImage::Format format);

@@ -11,7 +11,9 @@
 
 #include <opencv2/imgproc.hpp>
 
-QVideoSource::QVideoSource(QObject *parent) : QObject(parent)
+QVideoSource::QVideoSource(QObject *parent) : QObject(parent),
+    pt_qcam(nullptr),
+    m_transform(QVideoSource::NoTransform)
 {
     connect(&m_qvideosurface, SIGNAL(frameAvailable(cv::Mat,QImage::Format)), this, SLOT(__transformFrame(cv::Mat,QImage::Format)));
 }
@@ -44,14 +46,14 @@ void QVideoSource::selectDevice()
 
     if(dialog.exec() == QDialog::Accepted) {
         delete pt_qcam;
-        pt_qcam = NULL;
+        pt_qcam = nullptr;
         pt_qcam = new QCamera(devlist[devicesCB.currentIndex()]);
     }
 }
 
 bool QVideoSource::open()
 {
-    if(pt_qcam != NULL) {
+    if(pt_qcam != nullptr) {
         connect(pt_qcam, SIGNAL(error(QCamera::Error)), this, SLOT(__onError(QCamera::Error)));
         pt_qcam->setViewfinder(&m_qvideosurface);
         pt_qcam->start();
@@ -85,21 +87,21 @@ void QVideoSource::__onError(QCamera::Error _error)
 
 void QVideoSource::close()
 {
-    if(pt_qcam != NULL) {       
+    if(pt_qcam != nullptr) {
         pt_qcam->stop();
     }
 }
 
 void QVideoSource::pause()
 {
-    if(pt_qcam != NULL) {
+    if(pt_qcam != nullptr) {
         pt_qcam->stop();
     }
 }
 
 void QVideoSource::resume()
 {
-    if(pt_qcam != NULL) {
+    if(pt_qcam != nullptr) {
         pt_qcam->start();
     }
 }

@@ -101,14 +101,7 @@ void MainWindow::createThreads()
 {
     //-------------------Pointers for objects------------------------
     pt_improcThread = new QThread(this); // Make an own QThread for opencv interface
-    pt_opencvProcessor = new QOpencvProcessor();
-    std::string cascadeFilename = std::string("haarcascades/haarcascade_frontalface_alt.xml");
-    #ifdef HAARCASCADES_PATH
-        //cascadeFilename = std::string(HAARCASCADES_PATH) + std::string("haarcascade_frontalface_alt.xml");
-        cascadeFilename = std::string(LBPCASCADES_PATH) + std::string("lbpcascade_frontalface.xml");
-    #endif
-    bool loadResult = pt_opencvProcessor->loadClassifier( cascadeFilename );
-    qWarning("Haarcascade %s was %s", cascadeFilename.c_str(), loadResult ? "loaded" : "not loadeded");
+    pt_opencvProcessor = new QOpencvProcessor();    
     pt_opencvProcessor->moveToThread( pt_improcThread );
     connect(pt_improcThread, SIGNAL(finished()), pt_opencvProcessor, SLOT(deleteLater()));
 
@@ -125,8 +118,7 @@ void MainWindow::createThreads()
     qRegisterMetaType<cv::Rect>("cv::Rect");
 
     //----------------------Connections------------------------------
-    //connect(pt_videoCapture, SIGNAL(frame_was_captured(cv::Mat)), pt_opencvProcessor, SLOT(custom_algorithm(cv::Mat)),Qt::BlockingQueuedConnection);
-    connect(pt_videoCapture, SIGNAL(frame_was_captured(cv::Mat)), pt_opencvProcessor, SLOT(searchFace(cv::Mat)),Qt::BlockingQueuedConnection);
+    connect(pt_videoCapture, SIGNAL(frame_was_captured(cv::Mat)), pt_opencvProcessor, SLOT(custom_algorithm(cv::Mat)),Qt::BlockingQueuedConnection);
     connect(pt_opencvProcessor, SIGNAL(frame_was_processed(cv::Mat,double)), pt_display, SLOT(updateImage(cv::Mat,double)), Qt::BlockingQueuedConnection);
     connect(pt_display, SIGNAL(selectionUpdated(cv::Rect)), pt_opencvProcessor, SLOT(setRect(cv::Rect)));
 

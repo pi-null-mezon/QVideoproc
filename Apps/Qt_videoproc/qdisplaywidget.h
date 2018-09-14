@@ -1,12 +1,12 @@
 #ifndef QDISPLAYWIDGET_H
 #define QDISPLAYWIDGET_H
 
-#include <QOpenGLWidget>
+#include <QWidget>
 #include <QPainter>
 
 #include <opencv2/core.hpp>
 
-class QDisplayWidget : public QOpenGLWidget
+class QDisplayWidget : public QWidget
 {
     Q_OBJECT
 public:
@@ -16,7 +16,7 @@ signals:
 
 public slots:
     void updateImage(const QImage &_qimg);
-    void updateImage(const cv::Mat &_cvmat); // will try to guess QImage::Format, use overloaded function if you now appropriate QImage::Format instead
+    void updateImage(const cv::Mat &_cvmat);
     void updateImage(const cv::Mat &_cvmat, QImage::Format _format);
 
 protected:
