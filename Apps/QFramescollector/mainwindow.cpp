@@ -131,7 +131,7 @@ void MainWindow::loadSessionSettings()
     capturetimer.setInterval(1000*_settings.value("Captureinterval_s",1).toInt());
 }
 
-void MainWindow::on_captureTB_clicked(bool checked)
+void MainWindow::on_actionCapture_triggered(bool checked)
 {
     if(checked == true) {
         QPalette _palette = palette();

@@ -219,6 +219,9 @@
    <property name="toolTip">
     <string>Capture frames to target location</string>
    </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

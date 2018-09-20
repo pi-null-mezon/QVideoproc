@@ -25,9 +25,8 @@ private slots:
     void on_viewfindersettingsCB_currentIndexChanged(int index);
     void on_targetlocationB_clicked();
     void on_targetlocationLE_textChanged(const QString &arg1);
-    void on_captureintervalD_valueChanged(int value);
-
-    void on_captureTB_clicked(bool checked);
+    void on_captureintervalD_valueChanged(int value);   
+    void on_actionCapture_triggered(bool checked);
 
 protected:
     void closeEvent(QCloseEvent *_event);
