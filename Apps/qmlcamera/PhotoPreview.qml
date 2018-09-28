@@ -70,11 +70,11 @@ Item {
         horizontalAlignment: Text.AlignHLeft
         verticalAlignment: Text.AlignBottom
         elide: Text.ElideRight
-        color: "#99FF00"
+        color: "White"
         font.bold: true
         style: Text.Raised
         styleColor: "Black"
-        font.pixelSize: 22
+        font.pixelSize: 30
         wrapMode: Text.Wrap
     }
 }

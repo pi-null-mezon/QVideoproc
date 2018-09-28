@@ -1,5 +1,5 @@
 TEMPLATE=app
-TARGET=qmlcamera
+TARGET=Dialyzer
 
 QT += quick qml multimedia
 

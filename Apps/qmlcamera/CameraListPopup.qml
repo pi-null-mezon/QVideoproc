@@ -80,7 +80,7 @@ Popup {
                 font.bold: true
                 style: Text.Raised
                 styleColor: "black"
-                font.pixelSize: 14
+                font.pixelSize: 20
             }
             MouseArea {
                 anchors.fill: parent

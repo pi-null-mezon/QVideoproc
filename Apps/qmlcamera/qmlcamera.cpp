@@ -57,8 +57,8 @@ int main(int argc, char* argv[])
 
     QObject *_qmlrootobj = qobject_cast<QObject *>(view.rootObject());
     QProxyObject proxyobj;
-    proxyobj.setApiurl("http://webservices.nes.lan/facerec/api/v1.0/identify");
-    //QObject::connect(_qmlrootobj,SIGNAL(frameCaptured(QString)),&proxyobj,SLOT(postTask(QString)));
+    proxyobj.setApiurl("http://10.0.192.47:5001/dialyzerrec/api/v1.0/identify");
+    QObject::connect(_qmlrootobj,SIGNAL(frameCaptured(QString)),&proxyobj,SLOT(postTask(QString)));
     QObject::connect(&proxyobj,SIGNAL(replyReady(QString)),_qmlrootobj,SIGNAL(replyReady(QString)));
 
     view.show();

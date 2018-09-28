@@ -104,7 +104,7 @@ Rectangle {
             }
         }
 
-        //viewfinder.resolution: "640x360"
+        viewfinder.resolution: "640x480"
 
         videoRecorder {
              resolution: "640x360"

@@ -48,7 +48,7 @@ Item {
     property string text
     property color color: "white"
 
-    width : 150
+    width : 200
     height: 50
 
     BorderImage {
@@ -73,6 +73,6 @@ Item {
         font.bold: true
         style: Text.Raised
         styleColor: "Black"
-        font.pixelSize: 20
+        font.pixelSize: 30
     }
 }

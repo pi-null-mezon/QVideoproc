@@ -3,6 +3,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QHttpMultiPart>
+#include <QJsonParseError>
+#include <QJsonObject>
 #include <QUrl>
 #include <QFile>
 #include <QImage>
@@ -26,7 +28,7 @@ void QRecognitionTaskPoster::run()
     QByteArray _qba;
     QBuffer _qbuffer(&_qba);
     _qbuffer.open(QIODevice::ReadWrite);
-    (_qimg.scaled(QSize(640,360),Qt::KeepAspectRatio)).save(&_qbuffer,"JPEG");
+    (_qimg.scaled(QSize(640,480),Qt::KeepAspectRatio,Qt::SmoothTransformation)).save(&_qbuffer,"JPEG",97);
 
     _photo.setBody(_qba);
     _fields->append(_photo);
@@ -37,7 +39,9 @@ void QRecognitionTaskPoster::run()
     QObject::connect(_reply, SIGNAL(finished()), this, SLOT(quit()));
     exec();
 
-    /*if(_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200) {
+    QString _result;
+    QString _resultcolorname = "red";
+    if(_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200) {
         QJsonParseError _jperror;
         QByteArray _replydata = _reply->readAll();
         QJsonObject _json = QJsonDocument::fromJson(_replydata,&_jperror).object();
@@ -46,22 +50,24 @@ void QRecognitionTaskPoster::run()
                 qInfo("%s", _replydata.constData());
                 double _distance = _json.value("distance").toDouble();
                 if(_distance < _json.value("distancethresh").toDouble()) {
-                    emit labelPredicted(_json.value("label").toInt(),
-                                        _distance,
-                                        _json.value("labelinfo").toString().toUtf8().constData(),
-                                        facerr);
+                    _result = _json.value("labelinfo").toString();
+                    _resultcolorname = "#AAFF00";
                 } else {
-                    emit labelPredicted(-1,DBL_MAX,"",facerr);
+                    _result = tr("Предсказание нельзя считать достоверным:\n%1").arg(QString(_replydata));
                 }
             } else {
                 qWarning("%s", _replydata.constData());
-                emit labelPredicted(-1,DBL_MAX,"",facerr);
+                _result = tr("Сервер сообщил об ошибке");
             }
         } else {
             qWarning("JSON parser error - %s", _jperror.errorString().toUtf8().constData());
+            _result = tr("Не могу распарсить JSON");
         }
-    }*/
-    emit replyReady(_reply->readAll());
+
+        _result = QString("<font color='%2'>%1</font>").arg(_result,_resultcolorname);
+    }
+
+    emit replyReady(_result.toUtf8());
 
     QFile::remove(imgfilename);
     _fields->setParent(_reply);
