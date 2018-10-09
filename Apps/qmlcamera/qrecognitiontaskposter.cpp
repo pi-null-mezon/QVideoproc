@@ -51,9 +51,10 @@ void QRecognitionTaskPoster::run()
                 double _distance = _json.value("distance").toDouble();
                 if(_distance < _json.value("distancethresh").toDouble()) {
                     _result = _json.value("labelinfo").toString();
+                    //_result = _replydata;
                     _resultcolorname = "#AAFF00";
                 } else {
-                    _result = tr("Предсказание нельзя считать достоверным:\n%1").arg(QString(_replydata));
+                    _result = _replydata;
                 }
             } else {
                 qWarning("%s", _replydata.constData());

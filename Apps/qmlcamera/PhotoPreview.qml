@@ -74,7 +74,7 @@ Item {
         font.bold: true
         style: Text.Raised
         styleColor: "Black"
-        font.pixelSize: 30
+        font.pixelSize: 33
         wrapMode: Text.Wrap
     }
 }
