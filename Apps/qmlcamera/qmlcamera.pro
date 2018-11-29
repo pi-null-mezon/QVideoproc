@@ -1,5 +1,11 @@
 TEMPLATE=app
-TARGET=Dialyzer
+
+TARGET=OIRTClient
+VERSION=1.0.0.0
+
+DEFINES += APP_NAME=\\\"$${TARGET}\\\" \
+           APP_VERSION=\\\"$${VERSION}\\\" \
+           APP_DESIGNER=\\\"Alex_A._Taranov\\\"
 
 QT += quick qml multimedia
 

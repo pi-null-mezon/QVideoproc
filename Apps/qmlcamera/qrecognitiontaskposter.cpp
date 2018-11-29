@@ -46,28 +46,32 @@ void QRecognitionTaskPoster::run()
         QByteArray _replydata = _reply->readAll();
         QJsonObject _json = QJsonDocument::fromJson(_replydata,&_jperror).object();
         if(_jperror.error == QJsonParseError::NoError) {
-            if(QString::compare(_json.value("status").toString(),"Success",Qt::CaseInsensitive) == 0) { // equal strings
+            if(QString::compare(_json.value("status").toString(),"Success",Qt::CaseInsensitive) == 0) {
                 qInfo("%s", _replydata.constData());
                 double _distance = _json.value("distance").toDouble();
                 if(_distance < _json.value("distancethresh").toDouble()) {
                     _result = _json.value("labelinfo").toString();
                     //_result = _replydata;
-                    _resultcolorname = "#AAFF00";
+                    _resultcolorname = "#88EE00";
                 } else {
                     _result = _replydata;
                 }
             } else {
                 qWarning("%s", _replydata.constData());
-                _result = tr("Сервер сообщил об ошибке");
+                _result = tr("Error on identification");
             }
         } else {
             qWarning("JSON parser error - %s", _jperror.errorString().toUtf8().constData());
-            _result = tr("Не могу распарсить JSON");
-        }
-
-        _result = QString("<font color='%2'>%1</font>").arg(_result,_resultcolorname);
+            _result = tr("Can not parse JSON from server");
+        }        
+    } else {
+        if(_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).isValid())
+            _result = tr("Reply status code: %1").arg(_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString());
+        else
+            _result = tr("Can not connect to the server");
     }
 
+    _result = QString("<font color='%2'>%1</font>").arg(_result,_resultcolorname);
     emit replyReady(_result.toUtf8());
 
     QFile::remove(imgfilename);
@@ -83,7 +87,8 @@ void QProxyObject::postTask(const QString &_filename)
     thread->start();
 }
 
-QProxyObject::QProxyObject(QObject *_parent) : QObject(_parent)
+QProxyObject::QProxyObject(QObject *_parent) : QObject(_parent),
+    settings(nullptr)
 {
 }
 
@@ -95,4 +100,11 @@ QString QProxyObject::getApiurl() const
 void QProxyObject::setApiurl(const QString &value)
 {
     apiurl = value;
+    if(settings)
+        settings->setValue("ServerURL",value);
+}
+
+void QProxyObject::setSettings(QSettings *value)
+{
+    settings = value;
 }

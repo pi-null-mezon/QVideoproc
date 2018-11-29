@@ -39,18 +39,28 @@
 ****************************************************************************/
 
 import QtQuick 2.9
+import QtQuick.Controls 1.2
+import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.1
+import QtQuick.Window 2.0
 import QtMultimedia 5.9
 
 FocusScope {
     property Camera camera
     property bool previewAvailable : false
+    property string serverurl
+
+    function setServerUrl(_url) {
+        serverurl = _url;
+    }
 
     //property int buttonsPanelWidth: buttonPaneShadow.width
 
     signal previewSelected
     signal videoModeSelected
-    id : captureControls
+    signal urlUpdated
 
+    id : captureControls
 
     Column {
         anchors {
@@ -68,7 +78,8 @@ FocusScope {
         }
 
         CameraButton {
-            text: "Распознать"
+            text: "Identify"
+            color: "#88EE00"
             visible: camera.imageCapture.ready
             onClicked: camera.imageCapture.capture()
         }
@@ -107,7 +118,7 @@ FocusScope {
         }*/
 
         CameraButton {
-            text: "Результат"
+            text: "Results"
             onClicked: captureControls.previewSelected()
             visible: captureControls.previewAvailable
         }
@@ -130,8 +141,63 @@ FocusScope {
 
         CameraButton {
             id: quitButton
-            text: "Выход"
+            text: "Exit"
+            color: "#EE0000"
             onClicked: Qt.quit()
+        }
+    }
+
+    Dialog {
+        id: serverDialog
+
+        // Following two lines should be commented when build for Android
+        //width: 500
+        //height: 100
+
+        contentItem: Rectangle {
+            width: 500
+            height: 100
+            Column {
+                width: parent.width - 4
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    margins: 2
+                }
+                spacing: 2
+                Label {
+                    id: dialogLabel
+                    text: "URL of the identification server:"
+                }
+                TextField {
+                    id: urlText
+                    width: parent.width
+                    text: serverurl
+                }
+            }
+            Row {
+                anchors {
+                    bottom: parent.bottom
+                    right: parent.right
+                    margins: 2
+                }
+                spacing: 2
+                Button {
+                    id: rejectButton
+                    text: "Cancel"
+                    onClicked: serverDialog.reject();
+                }
+                Button {
+                    id: acceptButton
+                    text: "Apply"
+                    onClicked: serverDialog.accept();
+                }
+            }
+        }
+
+        onAccepted: {
+            serverurl = urlText.text
+            captureControls.urlUpdated()
         }
     }
 
@@ -148,6 +214,12 @@ FocusScope {
         CameraListButton {
             model: QtMultimedia.availableCameras
             onValueChanged: captureControls.camera.deviceId = value
+        }
+
+        CameraButton {
+            id: serverButton
+            text: "Server"
+            onClicked: serverDialog.open()
         }
     }
 

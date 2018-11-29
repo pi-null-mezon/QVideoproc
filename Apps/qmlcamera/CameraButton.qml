@@ -49,7 +49,7 @@ Item {
     property color color: "white"
 
     width : 200
-    height: 50
+    height: 50 
 
     BorderImage {
         id: buttonImage
@@ -69,10 +69,10 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
-        color: "White"
+        color: button.color
         font.bold: true
-        style: Text.Raised
-        styleColor: "Black"
-        font.pixelSize: 30
+        style: Text.Outline
+        styleColor: "black"
+        font.pixelSize: 27
     }
 }

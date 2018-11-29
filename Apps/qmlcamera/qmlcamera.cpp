@@ -42,6 +42,9 @@
 #include <QQuickView>
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <QSettings>
+#include <QStandardPaths>
+#include <QDir>
 
 #include "qrecognitiontaskposter.h"
 
@@ -53,12 +56,24 @@ int main(int argc, char* argv[])
     // Qt.quit() called in embedded .qml by default only emits
     // quit() signal, so do this (optionally use Qt.exit()).
     QObject::connect(view.engine(), SIGNAL(quit()), qApp, SLOT(quit()));
-    view.setSource(QUrl("qrc:///declarative-camera.qml"));
-
+    view.setSource(QUrl("qrc:///declarative-camera.qml"));    
     QObject *_qmlrootobj = qobject_cast<QObject *>(view.rootObject());
+
+    QString _appdirpath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation).append("/%1").arg(APP_NAME);
+    QDir _dir(_appdirpath);
+    if(!_dir.exists())
+        _dir.mkpath(_appdirpath);
+    QSettings _settings(_dir.absolutePath().append("/%1.ini").arg(APP_NAME),QSettings::IniFormat);
+
+    QString _serverurl = _settings.value("ServerURL","http://webservices.maximus.lan:5005/dialyzerrec/api/v1.0/identify").toString();
+    QMetaObject::invokeMethod(_qmlrootobj,"setServerUrl",Q_ARG(QVariant,_serverurl));
+
     QProxyObject proxyobj;
-    proxyobj.setApiurl("http://webservices.maximus.lan:5005/dialyzerrec/api/v1.0/identify");
+    proxyobj.setSettings(&_settings);
+    proxyobj.setApiurl(_serverurl);
+
     QObject::connect(_qmlrootobj,SIGNAL(frameCaptured(QString)),&proxyobj,SLOT(postTask(QString)));
+    QObject::connect(_qmlrootobj,SIGNAL(urlUpdated(QString)),&proxyobj,SLOT(setApiurl(QString)));
     QObject::connect(&proxyobj,SIGNAL(replyReady(QString)),_qmlrootobj,SIGNAL(replyReady(QString)));
 
     view.show();

@@ -46,8 +46,13 @@ Rectangle {
 
     signal frameCaptured(string filename)
 
-    signal replyReady(string _reply)
+    signal replyReady(string _reply)   
     onReplyReady: photoPreview.showText(_reply)
+
+    signal urlUpdated(string _url)
+    function setServerUrl(_url) {
+        stillControls.setServerUrl(_url);
+    }
 
     width: 800
     height: 480
@@ -151,6 +156,7 @@ Rectangle {
         visible: cameraUI.state == "PhotoCapture"
         onPreviewSelected: cameraUI.state = "PhotoPreview"
         onVideoModeSelected: cameraUI.state = "VideoCapture"
+        onUrlUpdated: cameraUI.urlUpdated(stillControls.serverurl)
     }
 
     VideoCaptureControls {
