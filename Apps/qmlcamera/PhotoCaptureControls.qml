@@ -43,6 +43,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.0
+import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.9
 
 FocusScope {
@@ -155,17 +156,20 @@ FocusScope {
         //height: 100
 
         contentItem: Rectangle {
-            width: 500
-            height: 100
-            Column {
-                width: parent.width - 4
+            color: "#333"
+
+            width: 600
+            height: 200
+            Column {               
                 anchors {
                     top: parent.top
                     left: parent.left
-                    margins: 2
+                    margins: 10
                 }
-                spacing: 2
-                Label {
+                spacing: anchors.margins
+                width: parent.width - 2*anchors.margins
+                Label {                    
+                    color: "white"
                     id: dialogLabel
                     text: "URL of the identification server:"
                 }
@@ -179,25 +183,62 @@ FocusScope {
                 anchors {
                     bottom: parent.bottom
                     right: parent.right
-                    margins: 2
+                    margins: 10
                 }
-                spacing: 2
+                spacing: anchors.margins
                 Button {
-                    id: rejectButton
-                    text: "Cancel"
-                    onClicked: serverDialog.reject();
-                }
-                Button {
-                    id: acceptButton
-                    text: "Apply"
+                    style: ButtonStyle {
+                        background: Rectangle {
+                                    implicitWidth: 100
+                                    implicitHeight: 25
+                                    border.width: control.activeFocus ? 2 : 1
+                                    border.color: "#aaa"
+                                    radius: 2
+                                    gradient: Gradient {
+                                        GradientStop { position: 0 ; color: control.pressed ? "#444" : "#555" }
+                                        GradientStop { position: 1 ; color: control.pressed ? "#333" : "#333" }
+                                    }
+                        }
+                        label: Label {
+                            color: "white"
+                            text:  "Apply"
+                            horizontalAlignment: Qt.AlignHCenter
+                        }
+                    }
                     onClicked: serverDialog.accept();
                 }
+                Button { 
+                    style: ButtonStyle {
+                        background: Rectangle {
+                                    implicitWidth: 100
+                                    implicitHeight: 25
+                                    border.width: control.activeFocus ? 2 : 1
+                                    border.color: "#aaa"
+                                    radius: 2
+                                    gradient: Gradient {
+                                        GradientStop { position: 0 ; color: control.pressed ? "#444" : "#555" }
+                                        GradientStop { position: 1 ; color: control.pressed ? "#333" : "#333" }
+                                    }
+                        }
+                        label: Label {
+                            color: "white"
+                            text:  "Cancel"
+                            horizontalAlignment: Qt.AlignHCenter
+                        }
+                    }
+                    onClicked: serverDialog.reject();
+                }                
             }
         }
 
         onAccepted: {
+            console.log("Accepted")
             serverurl = urlText.text
             captureControls.urlUpdated()
+        }
+
+        onRejected: {
+            urlText.text = serverurl
         }
     }
 

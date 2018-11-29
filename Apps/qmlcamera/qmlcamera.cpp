@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
         _dir.mkpath(_appdirpath);
     QSettings _settings(_dir.absolutePath().append("/%1.ini").arg(APP_NAME),QSettings::IniFormat);
 
-    QString _serverurl = _settings.value("ServerURL","http://webservices.maximus.lan:5005/dialyzerrec/api/v1.0/identify").toString();
+    QString _serverurl = _settings.value("ServerURL").toString();
     QMetaObject::invokeMethod(_qmlrootobj,"setServerUrl",Q_ARG(QVariant,_serverurl));
 
     QProxyObject proxyobj;
