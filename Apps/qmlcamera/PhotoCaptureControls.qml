@@ -80,7 +80,6 @@ FocusScope {
 
         CameraButton {
             text: "Identify"
-            color: "#88EE00"
             visible: camera.imageCapture.ready
             onClicked: camera.imageCapture.capture()
         }
@@ -143,7 +142,6 @@ FocusScope {
         CameraButton {
             id: quitButton
             text: "Exit"
-            color: "#EE0000"
             onClicked: Qt.quit()
         }
     }
@@ -156,7 +154,11 @@ FocusScope {
         //height: 100
 
         contentItem: Rectangle {
-            color: "#333"
+
+            gradient: Gradient {
+                GradientStop { position: 0 ; color: "#555" }
+                GradientStop { position: 1 ; color: "#333" }
+            }
 
             width: 600
             height: 200

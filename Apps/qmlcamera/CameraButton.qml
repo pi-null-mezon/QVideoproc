@@ -49,7 +49,7 @@ Item {
     property color color: "white"
 
     width : 225
-    height: 50 
+    height: 75
 
     BorderImage {
         id: buttonImage
@@ -73,6 +73,6 @@ Item {
         font.bold: true
         style: Text.Outline
         styleColor: "black"
-        font.pixelSize: 27
+        font.pixelSize: 33
     }
 }
