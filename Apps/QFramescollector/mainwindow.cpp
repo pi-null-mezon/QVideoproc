@@ -31,6 +31,7 @@ void MainWindow::updateImage(const QImage &_qimage)
 void MainWindow::saveImage()
 {
     if(!qimage.isNull() && !ui->targetlocationLE->text().isEmpty()) {
+        ui->lastframeW->updateImage(qimage);
         qimage.save(ui->targetlocationLE->text().append("/%1.jpg").arg(QUuid::createUuid().toString()));
         QDir _dir(ui->targetlocationLE->text());
         auto _files = _dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
