@@ -2,6 +2,7 @@
 
 #include <QDialog>
 #include <QCameraViewfinderSettings>
+#include <QCameraInfo>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -27,9 +28,9 @@ void QVideoSource::selectDevice()
     QVBoxLayout dialogL;
 
     QComboBox devicesCB;
-    QList<QByteArray> devlist = QCamera::availableDevices();
+    QList<QCameraInfo> devlist = QCameraInfo::availableCameras();
     for(int i = 0; i < devlist.length(); i++)
-        devicesCB.addItem(QCamera::deviceDescription(devlist[i]));
+        devicesCB.addItem(devlist.at(i).description());
 
     QHBoxLayout buttonsL;
     QPushButton cancelB(tr("Cancel"));
@@ -47,7 +48,7 @@ void QVideoSource::selectDevice()
     if(dialog.exec() == QDialog::Accepted) {
         delete pt_qcam;
         pt_qcam = nullptr;
-        pt_qcam = new QCamera(devlist[devicesCB.currentIndex()]);
+        pt_qcam = new QCamera(devlist.at(devicesCB.currentIndex()));
     }
 }
 

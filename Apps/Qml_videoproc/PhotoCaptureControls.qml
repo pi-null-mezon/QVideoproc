@@ -40,22 +40,12 @@
 
 import QtQuick 2.9
 import QtQuick.Controls 1.2
-import QtQuick.Dialogs 1.2
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.0
 import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.9
 
 FocusScope {
     property Camera camera
     property bool previewAvailable : false
-    property string serverurl
-
-    function setServerUrl(_url) {
-        serverurl = _url;
-    }
-
-    //property int buttonsPanelWidth: buttonPaneShadow.width
 
     signal previewSelected
     signal videoModeSelected
@@ -144,105 +134,7 @@ FocusScope {
             text: "Exit"
             onClicked: Qt.quit()
         }
-    }
-
-    Dialog {
-        id: serverDialog
-
-        // Following two lines should be commented when build for Android
-        //width: 500
-        //height: 100
-
-        contentItem: Rectangle {
-
-            gradient: Gradient {
-                GradientStop { position: 0 ; color: "#555" }
-                GradientStop { position: 1 ; color: "#333" }
-            }
-
-            width: 600
-            height: 200
-            Column {               
-                anchors {
-                    top: parent.top
-                    left: parent.left
-                    margins: 10
-                }
-                spacing: anchors.margins
-                width: parent.width - 2*anchors.margins
-                Label {                    
-                    color: "white"
-                    id: dialogLabel
-                    text: "URL of the identification server:"
-                }
-                TextField {
-                    id: urlText
-                    width: parent.width
-                    text: serverurl
-                }
-            }
-            Row {
-                anchors {
-                    bottom: parent.bottom
-                    right: parent.right
-                    margins: 10
-                }
-                spacing: anchors.margins
-                Button {
-                    style: ButtonStyle {
-                        background: Rectangle {
-                                    implicitWidth: 100
-                                    implicitHeight: 25
-                                    border.width: control.activeFocus ? 2 : 1
-                                    border.color: "#aaa"
-                                    radius: 2
-                                    gradient: Gradient {
-                                        GradientStop { position: 0 ; color: control.pressed ? "#444" : "#555" }
-                                        GradientStop { position: 1 ; color: control.pressed ? "#333" : "#333" }
-                                    }
-                        }
-                        label: Label {
-                            color: "white"
-                            text:  "Apply"
-                            horizontalAlignment: Qt.AlignHCenter
-                        }
-                    }
-                    onClicked: serverDialog.accept();
-                }
-                Button { 
-                    style: ButtonStyle {
-                        background: Rectangle {
-                                    implicitWidth: 100
-                                    implicitHeight: 25
-                                    border.width: control.activeFocus ? 2 : 1
-                                    border.color: "#aaa"
-                                    radius: 2
-                                    gradient: Gradient {
-                                        GradientStop { position: 0 ; color: control.pressed ? "#444" : "#555" }
-                                        GradientStop { position: 1 ; color: control.pressed ? "#333" : "#333" }
-                                    }
-                        }
-                        label: Label {
-                            color: "white"
-                            text:  "Cancel"
-                            horizontalAlignment: Qt.AlignHCenter
-                        }
-                    }
-                    onClicked: serverDialog.reject();
-                }                
-            }
-        }
-
-        onAccepted: {
-            console.log("Accepted")
-            serverurl = urlText.text
-            captureControls.urlUpdated()
-        }
-
-        onRejected: {
-            urlText.text = serverurl
-        }
-    }
+    }    
 
     Column {
         anchors {

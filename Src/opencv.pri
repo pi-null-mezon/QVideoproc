@@ -1,7 +1,7 @@
 #--------------------------------------------------------OPENCV----------------------------------------------------
 #Specify a path to the build directory of opencv library and library version
 win32 {
-    OPENCV_VERSION = 330
+    OPENCV_VERSION = 412
     OPENCV_DIR = C:/Programming/3rdParties/opencv$${OPENCV_VERSION}/build
     DEFINES += OPENCV_DIRECTORY=\\\"$${OPENCV_DIR}/..\\\"
     INCLUDEPATH += $${OPENCV_DIR}/include
@@ -57,44 +57,42 @@ unix {
             -lopencv_imgcodecs
 }
 #------------------------------------------------------------------------
-android {
+android { # builds successfully on Windows with android-ndk-r19c and Qt5.13.1 and opencv411
 
-# TO DO: add architecture parsing in this file
+    contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
 
-ANDROID_LIBS_PATH = C:/Android/OpenCV-android-sdk/sdk/native
-# Original instruction has been found here:
-# http://stackoverflow.com/questions/27562311/how-to-integrate-opencv-into-qt-creator-android-project
+        INCLUDEPATH += $$PWD/../../../Android/opencv-4.1.1-android-sdk/OpenCV-android-sdk/sdk/native/jni/include
+        LIBS += -L"$$PWD/../../../Android/opencv-4.1.1-android-sdk/OpenCV-android-sdk/sdk/native/staticlibs/armeabi-v7a" \
+                -lopencv_videoio \
+                -lopencv_dnn \
+                -lopencv_features2d \
+                -lopencv_flann \
+                -lopencv_highgui \
+                -lopencv_imgcodecs \
+                -lopencv_imgproc \
+                -lopencv_ml \
+                -lopencv_objdetect \
+                -lopencv_photo \
+                -lopencv_stitching \
+                -lopencv_video \
+                -lopencv_core
 
-INCLUDEPATH += $${ANDROID_LIBS_PATH}/jni/include
-
-    LIBS += -L$${ANDROID_LIBS_PATH}/3rdparty/libs/armeabi-v7a\
-            -L$${ANDROID_LIBS_PATH}/libs/armeabi-v7a
-
-    LIBS += -llibtiff \
-            -llibjpeg \
-            -llibjasper \
-            -llibpng \
+        LIBS += \
+            -L"$$PWD/../../../Android/opencv-4.1.1-android-sdk/OpenCV-android-sdk/sdk/native/3rdparty/libs/armeabi-v7a" \
+            -ltegra_hal \
+            -lcpufeatures \
             -lIlmImf \
-            -ltbb \
+            -littnotify \
+            -llibjasper \
+            -llibjpeg-turbo \
+            -llibpng \
+            -llibprotobuf \
+            -llibtiff \
             -llibwebp \
-            -lopencv_core \
-            -lopencv_flann \
-            -lopencv_imgproc \
-            -lopencv_highgui \
-            -lopencv_features2d \
-            -lopencv_calib3d \
-            -lopencv_ml \
-            -lopencv_objdetect \
-            -lopencv_video \
-            -lopencv_videoio \
-            -lopencv_photo \
-            -lopencv_java3 \
-            -lopencv_ts \
-            -lopencv_imgcodecs
+            -lquirc \
+            -ltbb
 
-    ANDROID_PACKAGE_SOURCE_DIR = $${PWD}/android
-
-    # !READ THIS! Manual step required to run the app:
-    # copy libopencv_java3.so from "OpenCV-android-sdk/sdk/native/3rdparty/libs/armeabi-v7a"
-    # to $${PWD}/android/libs/armeabi-v7a
+    } else {
+        error("Unsupported architecture: $$ANDROID_TARGET_ARCH")
+    }
 }

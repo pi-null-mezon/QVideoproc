@@ -6,7 +6,7 @@
         <file>VideoPreview.qml</file>
         <file>FocusButton.qml</file>
         <file>PhotoCaptureControls.qml</file>
-        <file>declarative-camera.qml</file>
+        <file>main.qml</file>
         <file>Popup.qml</file>
         <file>CameraPropertyPopup.qml</file>
         <file>CameraPropertyButton.qml</file>

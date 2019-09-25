@@ -9,7 +9,6 @@ CONFIG   += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = ACAM
 TEMPLATE = app
 VERSION = 1.0.0.0
 
@@ -38,6 +37,7 @@ DISTFILES += \
     android/gradlew.bat
 
 
-ANDROID_PACKAGE_SOURCE_DIR = $${PWD}/android
+
+
 
 

@@ -78,33 +78,3 @@ void QRecognitionTaskPoster::run()
     _fields->setParent(_reply);
     _reply->deleteLater();
 }
-
-void QProxyObject::postTask(const QString &_filename)
-{
-    QRecognitionTaskPoster *thread = new QRecognitionTaskPoster(getApiurl(),_filename);
-    connect(thread,SIGNAL(finished()),thread,SLOT(deleteLater()));
-    connect(thread,SIGNAL(replyReady(QString)),this,SIGNAL(replyReady(QString)));
-    thread->start();
-}
-
-QProxyObject::QProxyObject(QObject *_parent) : QObject(_parent),
-    settings(nullptr)
-{
-}
-
-QString QProxyObject::getApiurl() const
-{
-    return apiurl;
-}
-
-void QProxyObject::setApiurl(const QString &value)
-{
-    apiurl = value;
-    if(settings)
-        settings->setValue("ServerURL",value);
-}
-
-void QProxyObject::setSettings(QSettings *value)
-{
-    settings = value;
-}

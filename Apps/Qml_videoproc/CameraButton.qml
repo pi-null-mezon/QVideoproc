@@ -42,28 +42,21 @@ import QtQuick 2.0
 
 Item {
     id: button
-
     signal clicked
-
     property string text
     property color color: "white"
 
-    width : 225
-    height: 75
+    width : 180
+    height: 60
 
-    BorderImage {
-        id: buttonImage
-        //source: "images/groupbox.sci"
-        width: button.width; height: button.height
-    }
     MouseArea {
         id: mouseRegion
-        anchors.fill: buttonImage
+        anchors.fill: parent
         onClicked: { button.clicked(); }
     }
     Text {
         id: btnText
-        anchors.fill: buttonImage
+        anchors.fill: parent
         anchors.margins: 5
         text: button.text
         horizontalAlignment: Text.AlignHCenter
@@ -73,6 +66,6 @@ Item {
         font.bold: true
         style: Text.Outline
         styleColor: "black"
-        font.pixelSize: 33
+        font.pixelSize: 25
     }
 }
