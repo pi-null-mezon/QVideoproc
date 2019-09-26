@@ -24,9 +24,9 @@
 *.db
 
 # Qt and Borland files
-*.user
 *.user*
 **/build
+build*
 **/install
 /Resources/WVCF_utility/Win32
 /Resources/WVCF_utility/__history
