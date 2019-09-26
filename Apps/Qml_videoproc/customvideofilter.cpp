@@ -1,6 +1,8 @@
 #include "customvideofilter.h"
 
 #include <QDebug>
+#include <QtGlobal>
+
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -13,7 +15,7 @@ QVideoFilterRunnable *CustomFilter::createFilterRunnable()
 
 CustomVideoFilterRunnable::CustomVideoFilterRunnable(QObject *_parent)
 {
-
+    Q_UNUSED(_parent)
 }
 
 CustomVideoFilterRunnable::~CustomVideoFilterRunnable()
@@ -23,10 +25,14 @@ CustomVideoFilterRunnable::~CustomVideoFilterRunnable()
 
 QVideoFrame CustomVideoFilterRunnable::run(QVideoFrame *input, const QVideoSurfaceFormat &surfaceFormat, QVideoFilterRunnable::RunFlags flags)
 {
-    if(input->isValid()) {
-        qDebug() << input->pixelFormat();
+    Q_UNUSED(surfaceFormat)
+    Q_UNUSED(flags)
+    if(input->isValid()) {        
         input->map(QAbstractVideoBuffer::ReadOnly);
-        qDebug("input width x height: %d x %d x %d",input->width(),input->height(), input->bytesPerLine()/input->width());
+        qDebug() << input->pixelFormat()
+                 << " W: " << input->width()
+                 << " H: " << input->height()
+                 << " C: " << input->bytesPerLine()/input->width();
         switch(input->pixelFormat()) {
             case QVideoFrame::Format_YUYV: {
                 cv::Mat frame = cv::Mat(input->height(),input->width(),CV_8UC2,input->bits()).clone();
@@ -37,7 +43,7 @@ QVideoFrame CustomVideoFilterRunnable::run(QVideoFrame *input, const QVideoSurfa
                 QImage _qimg((const uchar *)frame.data,frame.cols,frame.rows,frame.cols*frame.channels(),QImage::Format_Grayscale8);
                 return QVideoFrame(_qimg.convertToFormat(QImage::Format_RGB32));
             } break;
-
+#if QT_VERSION > QT_VERSION_CHECK(5, 13, 0)
             case QVideoFrame::Format_ABGR32: {
                 cv::Mat frame = cv::Mat(input->height(),input->width(),CV_8UC4,input->bits()).clone();
                 cv::cvtColor(frame,frame,cv::COLOR_BGRA2GRAY);
@@ -47,6 +53,7 @@ QVideoFrame CustomVideoFilterRunnable::run(QVideoFrame *input, const QVideoSurfa
                 QImage _qimg((const uchar *)frame.data,frame.cols,frame.rows,frame.cols*frame.channels(),QImage::Format_Grayscale8);
                 return QVideoFrame(_qimg.convertToFormat(QImage::Format_RGB32));
             } break;
+#endif
 
             default:
 

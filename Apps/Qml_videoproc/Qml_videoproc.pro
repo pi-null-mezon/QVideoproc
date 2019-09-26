@@ -14,7 +14,8 @@ SOURCES += \
            qprocessor.cpp \
            qrecognitiontaskposter.cpp
 
-RESOURCES += declarative-camera.qrc
+RESOURCES += \
+    Qml_videoproc.qrc
 
 HEADERS += \
     customvideofilter.h \

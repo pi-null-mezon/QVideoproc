@@ -45,10 +45,8 @@ win32 {
     message(OpenCV library version $${OPENCV_DIR}/$${OPENCV_ARCHITECTURE_DIR}/$${OPENCV_COMPILER_DIR} will be used)
 }
 #------------------------------------------------------------------------
-unix {
-    OPENCV_DIR = /home/pi/Programming/3rdParties/opencv/build
-    LIBS += -L/usr/local/lib
-    LIBS += -L/usr/local/bin
+linux {
+    INCLUDEPATH += /usr/local/include/opencv4
     LIBS += -lopencv_core \
             -lopencv_objdetect \
             -lopencv_highgui \
@@ -57,12 +55,11 @@ unix {
             -lopencv_imgcodecs
 }
 #------------------------------------------------------------------------
-android { # builds successfully on Windows with android-ndk-r19c and Qt5.13.1 and opencv411
+android { # builds successfully on Windows with android-ndk-r19c, Qt5.13.1 and opencv411
+    contains(ANDROID_TARGET_ARCH,$${ANDROID_TARGET_ARCH}) {
+        INCLUDEPATH += $${PWD}/../../../Android/Opencv-sdk/sdk/native/jni/include
 
-    contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
-
-        INCLUDEPATH += $$PWD/../../../Android/opencv-4.1.1-android-sdk/OpenCV-android-sdk/sdk/native/jni/include
-        LIBS += -L"$$PWD/../../../Android/opencv-4.1.1-android-sdk/OpenCV-android-sdk/sdk/native/staticlibs/armeabi-v7a" \
+        LIBS += -L"$${PWD}/../../../Android/Opencv-sdk/sdk/native/staticlibs/$${ANDROID_TARGET_ARCH}" \
                 -lopencv_videoio \
                 -lopencv_dnn \
                 -lopencv_features2d \
@@ -78,7 +75,7 @@ android { # builds successfully on Windows with android-ndk-r19c and Qt5.13.1 an
                 -lopencv_core
 
         LIBS += \
-            -L"$$PWD/../../../Android/opencv-4.1.1-android-sdk/OpenCV-android-sdk/sdk/native/3rdparty/libs/armeabi-v7a" \
+            -L"$${PWD}/../../../Android/Opencv-sdk/sdk/native/3rdparty/libs/$${ANDROID_TARGET_ARCH}" \
             -ltegra_hal \
             -lcpufeatures \
             -lIlmImf \
@@ -89,10 +86,9 @@ android { # builds successfully on Windows with android-ndk-r19c and Qt5.13.1 an
             -llibprotobuf \
             -llibtiff \
             -llibwebp \
-            -lquirc \
-            -ltbb
-
+            -lquirc #\
+            #-ltbb
     } else {
-        error("Unsupported architecture: $$ANDROID_TARGET_ARCH")
+        error("Unsupported architecture: $${ANDROID_TARGET_ARCH}")
     }
 }
