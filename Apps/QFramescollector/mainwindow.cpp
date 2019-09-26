@@ -31,7 +31,9 @@ void MainWindow::updateImage(const QImage &_qimage)
 void MainWindow::saveImage()
 {
     if(!qimage.isNull() && !ui->targetlocationLE->text().isEmpty()) {
-        qimage.save(ui->targetlocationLE->text().append("/%1.jpg").arg(QUuid::createUuid().toString()));
+        QString _filename = ui->targetlocationLE->text().append("/%1.jpg").arg(QUuid::createUuid().toString());
+        qimage.save(_filename,"jpg",ui->qualityD->value());
+        ui->lastframeW->updateImage(QImage(_filename));
         QDir _dir(ui->targetlocationLE->text());
         auto _files = _dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
         ui->targetlocationfilesLE->setText(QString::number(_files.size()));
@@ -116,7 +118,8 @@ void MainWindow::saveSessionSettings()
 
     QSettings _settings(_settingsdir.append("/%1.ini").arg(APP_NAME),QSettings::IniFormat);
     _settings.setValue("Targetlocation",ui->targetlocationLE->text());
-    _settings.setValue("Captureinterval_s",static_cast<int>(ui->captureintervalLED->value()));
+    _settings.setValue("Captureinterval_s",ui->captureintervalD->value());
+    _settings.setValue("Photoquality",ui->qualityD->value());
 }
 
 void MainWindow::loadSessionSettings()
@@ -127,8 +130,13 @@ void MainWindow::loadSessionSettings()
 
     QSettings _settings(_settingsdir.append("/%1.ini").arg(APP_NAME),QSettings::IniFormat);
     ui->targetlocationLE->setText(_settings.value("Targetlocation","C:/Testdata").toString());
-    ui->captureintervalLED->display(_settings.value("Captureinterval_s",1).toInt());
-    capturetimer.setInterval(1000*_settings.value("Captureinterval_s",1).toInt());
+
+    ui->captureintervalD->setValue(_settings.value("Captureinterval_s",1).toInt());
+    ui->captureintervalLED->display(ui->captureintervalD->value());
+    capturetimer.setInterval(1000*ui->captureintervalD->value());
+
+    ui->qualityD->setValue(_settings.value("Photoquality",95).toInt());
+    ui->qualityLCD->display(ui->qualityD->value());
 }
 
 void MainWindow::on_actionCapture_triggered(bool checked)
@@ -142,4 +150,9 @@ void MainWindow::on_actionCapture_triggered(bool checked)
         ui->captureTB->setPalette(palette());
         capturetimer.stop();
     }
+}
+
+void MainWindow::on_qualityD_valueChanged(int value)
+{
+    ui->qualityLCD->display(value);
 }

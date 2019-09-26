@@ -28,6 +28,8 @@ private slots:
     void on_captureintervalD_valueChanged(int value);   
     void on_actionCapture_triggered(bool checked);
 
+    void on_qualityD_valueChanged(int value);
+
 protected:
     void closeEvent(QCloseEvent *_event);
 
