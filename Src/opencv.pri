@@ -86,8 +86,8 @@ android { # builds successfully on Windows with android-ndk-r19c, Qt5.13.1 and o
             -llibprotobuf \
             -llibtiff \
             -llibwebp \
-            -lquirc #\
-            #-ltbb
+            -lquirc \
+            -ltbb
     } else {
         error("Unsupported architecture: $${ANDROID_TARGET_ARCH}")
     }
