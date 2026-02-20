@@ -5,10 +5,13 @@
 #include <QFileDialog>
 #include <QSettings>
 #include <QUuid>
+#include <QMatrix>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    rotationAngle(0),
+    savedViewfinderIndex(0)
 {
     ui->setupUi(this);
     setWindowTitle(QString("%1 v%2").arg(APP_NAME,APP_VERSION));
@@ -26,13 +29,26 @@ MainWindow::~MainWindow()
 void MainWindow::updateImage(const QImage &_qimage)
 {
     qimage = _qimage;
+    QImage rotatedImage = qimage;
+    if(rotationAngle != 0) {
+        QMatrix matrix;
+        matrix.rotate(rotationAngle);
+        rotatedImage = qimage.transformed(matrix, Qt::SmoothTransformation);
+    }
+    ui->videodisplayW->updateImage(rotatedImage);
 }
 
 void MainWindow::saveImage()
 {
     if(!qimage.isNull() && !ui->targetlocationLE->text().isEmpty()) {
+        QImage imageToSave = qimage;
+        if(rotationAngle != 0) {
+            QMatrix matrix;
+            matrix.rotate(rotationAngle);
+            imageToSave = qimage.transformed(matrix, Qt::SmoothTransformation);
+        }
         QString _filename = ui->targetlocationLE->text().append("/%1.jpg").arg(QUuid::createUuid().toString());
-        qimage.save(_filename,"jpg",ui->qualityD->value());
+        imageToSave.save(_filename,"jpg",ui->qualityD->value());
         ui->lastframeW->updateImage(QImage(_filename));
         QDir _dir(ui->targetlocationLE->text());
         auto _files = _dir.entryList(QDir::Files | QDir::NoDotAndDotDot);
@@ -58,15 +74,18 @@ void MainWindow::getViewfinderSettings()
                                                             QString::number(_settingslist[i].minimumFrameRate(),'f',1));
         ui->viewfindersettingsCB->addItem(description);
     }
+    if(savedViewfinderIndex >= 0 && savedViewfinderIndex < ui->viewfindersettingsCB->count()) {
+        ui->viewfindersettingsCB->setCurrentIndex(savedViewfinderIndex);
+    }
 }
 
 void MainWindow::on_deviceCB_currentIndexChanged(int index)
 {
+    ui->viewfindersettingsCB->clear();
     QList<QCameraInfo> _devlist = QCameraInfo::availableCameras();
     qvideosource.close();
     qvideosource.open(_devlist.at(index));
     qvideosource.resume();
-    getViewfinderSettings();
 }
 
 void MainWindow::on_viewfindersettingsCB_currentIndexChanged(int index)
@@ -79,8 +98,8 @@ void MainWindow::on_viewfindersettingsCB_currentIndexChanged(int index)
 
 void MainWindow::commutate()
 {
-    connect(&qvideosource,SIGNAL(frameReady(QImage)),ui->videodisplayW,SLOT(updateImage(QImage)));
     connect(&qvideosource,SIGNAL(frameReady(QImage)),this,SLOT(updateImage(QImage)));
+    connect(&qvideosource,SIGNAL(cameraReady()),this,SLOT(getViewfinderSettings()));
     connect(&capturetimer,SIGNAL(timeout()),this,SLOT(saveImage()));
 }
 
@@ -120,6 +139,7 @@ void MainWindow::saveSessionSettings()
     _settings.setValue("Targetlocation",ui->targetlocationLE->text());
     _settings.setValue("Captureinterval_s",ui->captureintervalD->value());
     _settings.setValue("Photoquality",ui->qualityD->value());
+    _settings.setValue("ViewfinderIndex",ui->viewfindersettingsCB->currentIndex());
 }
 
 void MainWindow::loadSessionSettings()
@@ -137,6 +157,8 @@ void MainWindow::loadSessionSettings()
 
     ui->qualityD->setValue(_settings.value("Photoquality",95).toInt());
     ui->qualityLCD->display(ui->qualityD->value());
+
+    savedViewfinderIndex = _settings.value("ViewfinderIndex",0).toInt();
 }
 
 void MainWindow::on_actionCapture_triggered(bool checked)
@@ -155,4 +177,16 @@ void MainWindow::on_actionCapture_triggered(bool checked)
 void MainWindow::on_qualityD_valueChanged(int value)
 {
     ui->qualityLCD->display(value);
+}
+
+void MainWindow::on_rotateLeftB_clicked()
+{
+    rotationAngle -= 90;
+    if(rotationAngle < 0) rotationAngle = 270;
+}
+
+void MainWindow::on_rotateRightB_clicked()
+{
+    rotationAngle += 90;
+    if(rotationAngle >= 360) rotationAngle = 0;
 }

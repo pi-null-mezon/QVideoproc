@@ -25,7 +25,7 @@ bool QCustomVideoSurface::present(const QVideoFrame &frame)
                        _videoframe.width(),
                        _videoframe.height(),
                        QVideoFrame::imageFormatFromPixelFormat(_videoframe.pixelFormat()));
-        emit frameReady(_qimage.mirrored().copy());
+        emit frameReady(_qimage.copy());
         _videoframe.unmap();
         return true;
     }

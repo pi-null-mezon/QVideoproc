@@ -1,7 +1,8 @@
 #include "qvideosource.h"
 
 QVideoSource::QVideoSource(QObject *parent) : QObject(parent),
-    qcamera(nullptr)
+    qcamera(nullptr),
+    cameraLoaded(false)
 {
     qvideosurface = new QCustomVideoSurface(this);
     connect(qvideosurface, SIGNAL(frameReady(QImage)), this, SIGNAL(frameReady(QImage)));
@@ -10,9 +11,12 @@ QVideoSource::QVideoSource(QObject *parent) : QObject(parent),
 void QVideoSource::open(const QCameraInfo &_qcaminfo)
 {
     delete qcamera;
+    cameraLoaded = false;
     qcamera = new QCamera(_qcaminfo);
     connect(qcamera, SIGNAL(error(QCamera::Error)), this, SLOT(__onError(QCamera::Error)));
+    connect(qcamera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(__onStatusChanged(QCamera::Status)));
     qcamera->setViewfinder(qvideosurface);
+    qcamera->load();
 }
 
 void QVideoSource::__onError(QCamera::Error _error)
@@ -70,4 +74,12 @@ QList<QCameraViewfinderSettings> QVideoSource::supportedViewfinderSettings() con
         return qcamera->supportedViewfinderSettings();
     }
     return QList<QCameraViewfinderSettings>();
+}
+
+void QVideoSource::__onStatusChanged(QCamera::Status _status)
+{
+    if(_status == QCamera::LoadedStatus && !cameraLoaded) {
+        cameraLoaded = true;
+        emit cameraReady();
+    }
 }

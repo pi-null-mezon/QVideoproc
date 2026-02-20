@@ -21,6 +21,7 @@ public:
 private slots:
     void updateImage(const QImage &_qimage);
     void saveImage();
+    void getViewfinderSettings();
     void on_deviceCB_currentIndexChanged(int index);
     void on_viewfindersettingsCB_currentIndexChanged(int index);
     void on_targetlocationB_clicked();
@@ -29,6 +30,8 @@ private slots:
     void on_actionCapture_triggered(bool checked);
 
     void on_qualityD_valueChanged(int value);
+    void on_rotateLeftB_clicked();
+    void on_rotateRightB_clicked();
 
 protected:
     void closeEvent(QCloseEvent *_event);
@@ -38,12 +41,13 @@ private:
     void loadSessionSettings();
     void commutate();
     void getDevicesList();
-    void getViewfinderSettings();
 
     Ui::MainWindow *ui;
     QVideoSource qvideosource;
     QTimer capturetimer;
     QImage qimage;
+    int rotationAngle;
+    int savedViewfinderIndex;
 };
 
 #endif // MAINWINDOW_H

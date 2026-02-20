@@ -30,3 +30,4 @@ build*
 **/install
 /Resources/WVCF_utility/Win32
 /Resources/WVCF_utility/__history
+AGENTS.md

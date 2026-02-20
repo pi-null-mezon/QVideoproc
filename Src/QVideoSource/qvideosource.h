@@ -16,6 +16,7 @@ public:
 
 signals:
     void frameReady(const QImage &_qimage);
+    void cameraReady();
 
 public slots:
     void open(const QCameraInfo &_qcaminfo);
@@ -27,10 +28,12 @@ public slots:
 
 private slots:
     void __onError(QCamera::Error  _error);
+    void __onStatusChanged(QCamera::Status _status);
 
 private:
     QCamera *qcamera;
     QCustomVideoSurface *qvideosurface;
+    bool cameraLoaded;
 };
 
 

@@ -55,8 +55,8 @@ bool QCustomVideoSurface::present(const QVideoFrame &frame)
         cloneFrame.map(QAbstractVideoBuffer::ReadOnly);
         qDebug() << cloneFrame.pixelFormat();
         QImage::Format format = QVideoFrame::imageFormatFromPixelFormat(cloneFrame.pixelFormat());
-        int cvtype = CV_8UC1;
-        switch(format) {
+        int cvtype = CV_8UC2;
+        /*switch(format) {
             case QImage::Format_RGB32:
                 cvtype = CV_8UC4;
                 break;
@@ -70,7 +70,7 @@ bool QCustomVideoSurface::present(const QVideoFrame &frame)
                 // TO DO add the new formats if find
                 qDebug("QCustomVideoSurface Warning: image format is not implemented (QImage::Format %d)", format);
                 return false;
-        }
+        }*/
         cv::Mat mat(cloneFrame.height(), cloneFrame.width(), cvtype, (void *)cloneFrame.bits());
         cv::flip(mat,mat,0);
         emit frameAvailable(mat, format);
